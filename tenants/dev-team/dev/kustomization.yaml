@@ -20,6 +20,9 @@ patches:
       - op: add
         path: /spec/path
         value: ./staging
+      - op: add
+        path: /spec/targetNamespace
+        value: tenant-a-dev
       - op: replace
         path: /metadata/name
         value: tenant-a-dev
