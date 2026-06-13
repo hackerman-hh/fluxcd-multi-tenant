@@ -13,4 +13,4 @@ patches:
     patch: |
       - op: add
         path: /spec/path
-        value: ./prod
+        value: ./production
