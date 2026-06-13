@@ -14,3 +14,6 @@ patches:
       - op: add
         path: /spec/path
         value: ./prod
+      - op: replace
+        path: /metadata/name
+        value: tenant-a-prod
