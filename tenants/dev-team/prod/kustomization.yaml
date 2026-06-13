@@ -15,12 +15,23 @@ labels:
 
 patches:
   - target:
+      kind: GitRepository
+    patch: |
+      - op: add
+        path: /spec/secretRef/name
+        value: basic-access-auth
+  - target:
       kind: Kustomization
     patch: |
       - op: add
         path: /spec/path
         value: ./production
-
       - op: replace
         path: /metadata/name
         value: tenant-a-prod
+  - target:
+      kind: RoleBinding
+    patch: |
+      - op: replace
+        path: /subjects/0/name
+        value: gotk:tenant-a-prod:reconciler

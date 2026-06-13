@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - networkpolicy.yaml
   - rbac.yaml
+  - secret.yaml
   - source.yaml

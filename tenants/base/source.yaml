@@ -7,6 +7,7 @@ spec:
   url: https://github.com/fluxcd/flux2-multi-tenancy
   ref:
     branch: dev-team
+
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
