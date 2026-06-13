@@ -5,4 +5,4 @@ namespace: tenant-a-prod
 
 resources:
   - namespace.yaml
-  - ../base
+  - ../../base

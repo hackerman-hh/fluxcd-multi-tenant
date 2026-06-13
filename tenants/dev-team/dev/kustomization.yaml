@@ -5,4 +5,4 @@ namespace: tenant-a-dev
 
 resources:
   - namespace.yaml
-  - ../base
+  - ../../base
