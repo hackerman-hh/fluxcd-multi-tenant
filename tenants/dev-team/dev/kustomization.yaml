@@ -14,12 +14,12 @@ labels:
     toolkit.fluxcd.io/tenant: dev-team
 
 patches:
-  # - target:
-  #     kind: GitRepository
-  #   patch: |
-  #     - op: add
-  #       path: /spec/url
-  #       value: "https://github.com/fluxcd/flux2-multi-tenancy"
+  - target:
+      kind: GitRepository
+    patch: |
+      - op: add
+        path: /spec/url
+        value: "https://github.com/fluxcd/flux2-multi-tenancy"
   #     - op: add
   #       path: /spec/secretRef
   #       value: 

@@ -4,7 +4,6 @@ metadata:
   name: gitrepo
 spec:
   interval: 1m
-  url: https://github.com/fluxcd/flux2-multi-tenancy
   ref:
     branch: dev-team
 
@@ -14,7 +13,6 @@ kind: Kustomization
 metadata:
   name: kustomization
 spec:
-  serviceAccountName: my-serviceaccount
   interval: 5m
   sourceRef:
     kind: GitRepository

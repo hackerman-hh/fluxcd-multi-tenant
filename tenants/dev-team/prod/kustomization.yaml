@@ -18,6 +18,12 @@ patches:
       kind: GitRepository
     patch: |
       - op: add
+        path: /spec/url
+        value: "https://github.com/fluxcd/flux2-multi-tenancy"
+  - target:
+      kind: GitRepository
+    patch: |
+      - op: add
         path: /spec/secretRef        
         value: 
           name: "secret-basic-auth"
