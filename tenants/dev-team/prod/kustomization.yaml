@@ -26,6 +26,9 @@ patches:
       - op: add
         path: /spec/path
         value: ./production
+      - op: add
+        path: /spec/targetNamespace
+        value: tenant-a-prod
       - op: replace
         path: /metadata/name
         value: tenant-a-prod
