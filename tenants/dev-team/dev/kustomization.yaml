@@ -36,7 +36,7 @@ patches:
       - op: replace
         path: /metadata/name
         value: tenant-a-dev
-      - op: replace
+      - op: add
         path: /spec/serviceAccountName
         value: tenant-a-sa-dev
   - target:
