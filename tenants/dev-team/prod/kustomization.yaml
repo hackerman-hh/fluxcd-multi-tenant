@@ -7,6 +7,12 @@ resources:
   - namespace.yaml
   - ../../base
 
+labels:
+- includeSelectors: true
+  pairs:
+    env: prod
+    toolkit.fluxcd.io/tenant: dev-team
+
 patches:
   - target:
       kind: Kustomization
