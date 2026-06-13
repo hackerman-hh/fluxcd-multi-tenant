@@ -26,10 +26,22 @@ patches:
       - op: replace
         path: /metadata/name
         value: tenant-a-dev
+      - op: replace
+        path: /spec/serviceAccountName
+        value: tenant-a-sa-dev
+  - target:
+      kind: ServiceAccount
+    patch: |
+      - op: replace
+        path: /metadata/name
+        value: tenant-a-sa-dev
   - target:
       kind: RoleBinding
     patch: |
       - op: replace
         path: /subjects/0/name
         value: gotk:tenant-a-dev:reconciler
+      - op: replace
+        path: /subjects/1/name
+        value: tenant-a-sa-dev
       
