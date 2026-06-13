@@ -18,8 +18,9 @@ patches:
       kind: GitRepository
     patch: |
       - op: add
-        path: /spec/secretRef/name
-        value: "secret-basic-auth"
+        path: /spec/secretRef        
+        value: 
+          name: "secret-basic-auth"
   - target:
       kind: Kustomization
     patch: |
