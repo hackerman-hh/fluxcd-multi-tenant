@@ -19,7 +19,7 @@ patches:
     patch: |
       - op: add
         path: /spec/secretRef/name
-        value: "basic-access-auth"
+        value: "secret-basic-auth"
   - target:
       kind: Kustomization
     patch: |
