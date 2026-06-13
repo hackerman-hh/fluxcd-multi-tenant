@@ -6,3 +6,14 @@ namespace: tenant-a-dev
 resources:
   - namespace.yaml
   - ../../base
+
+patches:
+  - target:
+      kind: Kustomization
+    patch: |
+      - op: add
+        path: /spec/path
+        value: ./staging
+      - op: replace
+        path: /metadata/name
+        value: tenant-a-dev

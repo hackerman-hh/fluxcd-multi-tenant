@@ -6,3 +6,11 @@ namespace: tenant-a-prod
 resources:
   - namespace.yaml
   - ../../base
+
+patches:
+  - target:
+      kind: Kustomization
+    patch: |
+      - op: add
+        path: /spec/path
+        value: ./prod
