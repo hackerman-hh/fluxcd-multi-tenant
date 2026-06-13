@@ -14,7 +14,7 @@ kind: Kustomization
 metadata:
   name: kustomization
 spec:
-  serviceAccountName: flux
+  serviceAccountName: my-serviceaccount
   interval: 5m
   sourceRef:
     kind: GitRepository

@@ -18,9 +18,6 @@ patches:
       kind: Kustomization
     patch: |
       - op: add
-        path: /spec/targetNamespace
-        value: tenant-a-dev
-      - op: add
         path: /spec/path
         value: ./staging
       - op: replace
