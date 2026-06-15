@@ -1,0 +1,109 @@
+name: Provision Tenant
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  build:
+    if: contains(github.event.issue.labels.*.name, 'new-tenant')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse Issue Form
+        uses: stefanbuck/github-issue-parser@v3
+        id: issue-parser
+        with:
+          template-path: .github/issue_template/new-tenant.yml
+
+      - name: Generate Manifests
+        env:
+          TENANT_ID: ${{ steps.issue-parser.outputs.tenant_id }}
+          ENV: ${{ steps.issue-parser.outputs.environment }}
+          GIT_URL: ${{ steps.issue-parser.outputs.git_url }}
+          GIT_PATH: ${{ steps.issue-parser.outputs.git_path }}
+          GCP_SA: ${{ steps.issue-parser.outputs.gcp_sa }}
+        run: |
+          TARGET_DIR="apps/${TENANT_ID}-${ENV}"
+          mkdir -p $TARGET_DIR
+          
+          # 1. Generate the namespace file
+          cat <<EOF > $TARGET_DIR/namespace.yaml
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: ${TENANT_ID}-${ENV}
+          EOF
+
+          # 2. Generate the Kustomization using a heredoc
+          cat <<EOF > $TARGET_DIR/kustomization.yaml
+          apiVersion: kustomize.config.k8s.io/v1beta1
+          kind: Kustomization
+
+          namespace: ${TENANT_ID}-${ENV}
+
+          resources:
+            - namespace.yaml
+            - ../../base
+
+          labels:
+            - includeSelectors: true
+              pairs:
+                env: ${ENV}
+                toolkit.fluxcd.io/tenant: ${TENANT_ID}
+
+          patches:
+            - target:
+                kind: GitRepository
+              patch: |
+                - op: add
+                  path: /spec/url
+                  value: "${GIT_URL}"
+            - target:
+                kind: Kustomization
+              patch: |
+                - op: add
+                  path: /spec/path
+                  value: ${GIT_PATH}
+                - op: add
+                  path: /spec/targetNamespace
+                  value: ${TENANT_ID}-${ENV}
+                - op: replace
+                  path: /metadata/name
+                  value: ${TENANT_ID}-${ENV}
+                - op: add
+                  path: /spec/serviceAccountName
+                  value: ${TENANT_ID}-sa-${ENV}
+            - target:
+                kind: ServiceAccount
+              patch: |
+                - op: replace
+                  path: /metadata/name
+                  value: ${TENANT_ID}-sa-${ENV}
+                - op: add
+                  path: /metadata/annotations
+                  value:
+                    iam.gke.io/gcp-service-account: "${GCP_SA}"
+            - target:
+                kind: RoleBinding
+              patch: |
+                - op: replace
+                  path: /subjects/0/name
+                  value: gotk:${TENANT_ID}-${ENV}:reconciler
+                - op: replace
+                  path: /subjects/1/name
+                  value: ${TENANT_ID}-sa-${ENV}
+          EOF
+
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'Platform Bot'
+          git config --global user.email 'platform-bot@users.noreply.github.com'
+          git add .
+          git commit -m "feat: provision tenant ${{ steps.issue-parser.outputs.tenant_id }}-${{ steps.issue-parser.outputs.environment }}"
+          git push
+
+      - name: Close Issue
+        uses: peter-evans/close-issue@v3
+        with:
+          comment: "Tenant environment successfully provisioned and committed to GitOps!"
