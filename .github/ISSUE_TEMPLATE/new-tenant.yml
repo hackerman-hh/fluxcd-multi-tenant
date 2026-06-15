@@ -29,7 +29,6 @@ body:
     id: git_path
     attributes:
       label: Git Path
-      default: "./staging"
   - type: input
     id: gcp_sa
     attributes:
