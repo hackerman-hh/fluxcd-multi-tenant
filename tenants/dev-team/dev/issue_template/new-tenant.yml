@@ -1,0 +1,38 @@
+name: 🚀 Request New Tenant Environment
+description: Provision a new isolated GitOps tenant environment.
+labels: ["new-tenant"]
+body:
+  - type: input
+    id: tenant_id
+    attributes:
+      label: Tenant ID
+      placeholder: e.g., tenant-b
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - dev
+        - staging
+        - prod
+    validations:
+      required: true
+  - type: input
+    id: git_url
+    attributes:
+      label: Git Repository URL
+    validations:
+      required: true
+  - type: input
+    id: git_path
+    attributes:
+      label: Git Path
+      default: "./staging"
+  - type: input
+    id: gcp_sa
+    attributes:
+      label: GCP Service Account Email
+    validations:
+      required: false
