@@ -20,13 +20,14 @@ jobs:
         uses: stefanbuck/github-issue-parser@v3
         with:
           template-path: .github/ISSUE_TEMPLATE/new-tenant.yml
+        run: cat ${HOME}/issue-parser-result.json
 
       - name: Use Parsed Data
         env:
-          ENVIRONMENTS: ${{ steps.issue-parser.outputs.what-happened }}
-          TENANT: ${{ steps.issue-parser.outputs.tenant_id }}
-          WHAT: ${{ steps.issue-parser.outputs.what-happened }}
+          ENVIRONMENTS: ${{ steps.issue-parser.outputs.environments }}
+          TENANT: "${{ steps.issue-parser.outputs.tenant_id }}"
+          WHAT: "${{ steps.issue-parser.outputs.what-happened }}"
         run: |
-          echo "what-happened: §{WHAT}"
+          echo "what-happened: ${WHAT}"
           echo "Environments: ${ENVIRONMENTS}"
           echo "Tenant: ${TENANT}"
