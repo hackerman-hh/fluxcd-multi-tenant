@@ -24,9 +24,9 @@ jobs:
 
       - name: Use Parsed Data
         env:
-          ENVIRONMENTS: ${{ steps.issue-parser.outputs.environments }}
-          TENANT: "${{ steps.issue-parser.outputs.tenant_id }}"
-          WHAT: "${{ steps.issue-parser.outputs.what-happened }}"
+          ENVIRONMENTS: ${{ steps.issue-parser.outputs.issueparser_environments }}
+          TENANT: "${{ steps.issue-parser.outputs.issueparser_tenant_id }}"
+          WHAT: "${{ steps.issue-parser.outputs.issueparser_what-happened }}"
         run: |
           echo "what-happened: ${WHAT}"
           echo "Environments: ${ENVIRONMENTS}"
