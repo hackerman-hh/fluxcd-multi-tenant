@@ -8,7 +8,7 @@ body:
       label: Tenant ID
       placeholder: e.g., tenant-b
     validations:
-      required: true
+      required: false
   - type: dropdown
     id: environment
     attributes:
@@ -18,13 +18,13 @@ body:
         - staging
         - prod
     validations:
-      required: true
+      required: false
   - type: input
     id: git_url
     attributes:
       label: Git Repository URL
     validations:
-      required: true
+      required: false
   - type: input
     id: git_path
     attributes:
@@ -34,4 +34,19 @@ body:
     attributes:
       label: GCP Service Account Email
     validations:
-      required: true
+      required: false
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com).
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: false
