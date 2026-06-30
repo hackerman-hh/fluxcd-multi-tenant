@@ -19,11 +19,14 @@ jobs:
         id: issue-parser
         uses: stefanbuck/github-issue-parser@v3
         with:
-          # Points to the issue template form you want to parse
           template-path: .github/ISSUE_TEMPLATE/new-tenant.yml
 
       - name: Use Parsed Data
+        env:
+          ENVIRONMENTS: ${{ steps.issue-parser.outputs.what-happened }}
+          TENANT: ${{ steps.issue-parser.outputs.tenant_id }}
+          WHAT: ${{ steps.issue-parser.outputs.what-happened }}
         run: |
-          echo "what-happened: ${{ steps.issue-parser.outputs.what-happened }}"
-          echo "Environments: ${{ steps.issue-parser.outputs.environments }}"
-          echo "Tenant: ${{ steps.issue-parser.outputs.tenant_id }}"
+          echo "what-happened: §WHAT"
+          echo "Environments: $ENVIRONMENTS"
+          echo "Tenant: $TENANT"
