@@ -20,22 +20,31 @@ jobs:
         with:
           template-path: .github/ISSUE_TEMPLATE/new-tenant.yml
 
-      - name: Debug and Extract Parsed Data
+      - name: Extract and Save Data
+        id: custom-extractor
         env:
-          # We grab the raw JSON object string directly from the action
           RAW_JSON: ${{ steps.issue-parser.outputs.jsonString }}
         run: |
-          # 1. Print the raw JSON to your logs so you can see the exact keys
-          echo "--- RAW PARSED JSON DATA ---"
-          echo "$RAW_JSON"
-          echo "----------------------------"
+          # 1. Extract values using jq
+          TENANT=$(echo "$RAW_JSON" | jq -r '.tenant_id')
+          ENVIRONMENTS=$(echo "$RAW_JSON" | jq -c '.environments')
           
-          # 2. Extract values safely using 'jq' based on your Markdown fields
-          # (Note: jq keys are case-sensitive and match your template IDs)
-          TENANT=$(echo "$RAW_JSON" | jq -r '."tenant_id" // ."tenant-id" // ."Tenant ID" // empty')
-          WHAT=$(echo "$RAW_JSON" | jq -r '."what-happened" // ."what_happened" // empty')
-          ENVIRONMENTS=$(echo "$RAW_JSON" | jq -c '."environments" // ."Environments" // empty')
+          # 2. Save single-line strings safely to the $GITHUB_ENV
+          echo "TENANT_ID=$TENANT" >> $GITHUB_ENV
+          echo "ENVIRONMENTS=$ENVIRONMENTS" >> $GITHUB_ENV
           
+          # 3. Save multi-line strings safely using a Heredoc delimiter
+          echo "WHAT_HAPPENED<<EOF" >> $GITHUB_ENV
+          echo "$RAW_JSON" | jq -r '."what-happened"' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Next Step Example
+        run: |
+          # You can now cleanly access these in any later step of this job
+          echo "Using tenant across steps: $TENANT_ID"
+          echo "Using environments: $ENVIRONMENTS"
+          echo "Using multi-line what happened:"
+          echo "$WHAT_HAPPENED"
           # 3. Echo the final extracted data
           echo "Tenant: ${TENANT}"
           echo "Environments: ${ENVIRONMENTS}"
