@@ -33,7 +33,7 @@ body:
       placeholder: Tell us what you see!
       value: "A bug happened!"
   - type: checkboxes
-    id: terms
+    id: environments
     attributes:
       label: Environments
       description: Environments
