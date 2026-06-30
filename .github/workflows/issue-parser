@@ -27,6 +27,6 @@ jobs:
           TENANT: ${{ steps.issue-parser.outputs.tenant_id }}
           WHAT: ${{ steps.issue-parser.outputs.what-happened }}
         run: |
-          echo "what-happened: §WHAT"
-          echo "Environments: $ENVIRONMENTS"
-          echo "Tenant: $TENANT"
+          echo "what-happened: §{WHAT}"
+          echo "Environments: ${ENVIRONMENTS}"
+          echo "Tenant: ${TENANT}"
