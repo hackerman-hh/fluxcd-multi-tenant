@@ -1,0 +1,29 @@
+name: Parse Issue
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    # Optional: Grant permissions if you plan to comment or modify the issue later
+    permissions:
+      issues: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v7
+
+      - name: Parse Issue Body
+        id: issue-parser
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          # Points to the issue template form you want to parse
+          template-path: .github/ISSUE_TEMPLATE/new-tenant.yml
+
+      - name: Use Parsed Data
+        run: |
+          echo "what-happened: ${{ steps.issue-parser.outputs.what-happened }}"
+          echo "Environments: ${{ steps.issue-parser.outputs.environments }}"
+          echo "Tenant: ${{ steps.issue-parser.outputs.tenant_id }}"
