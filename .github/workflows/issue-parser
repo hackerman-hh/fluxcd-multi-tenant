@@ -7,7 +7,6 @@ on:
 jobs:
   parse:
     runs-on: ubuntu-latest
-    # Optional: Grant permissions if you plan to comment or modify the issue later
     permissions:
       issues: write
 
@@ -20,14 +19,24 @@ jobs:
         uses: stefanbuck/github-issue-parser@v3
         with:
           template-path: .github/ISSUE_TEMPLATE/new-tenant.yml
-        run: cat ${HOME}/issue-parser-result.json
 
-      - name: Use Parsed Data
+      - name: Debug and Extract Parsed Data
         env:
-          ENVIRONMENTS: ${{ steps.issue-parser.outputs.issueparser_environments }}
-          TENANT: "${{ steps.issue-parser.outputs.issueparser_tenant_id }}"
-          WHAT: "${{ steps.issue-parser.outputs.issueparser_what-happened }}"
+          # We grab the raw JSON object string directly from the action
+          RAW_JSON: ${{ steps.issue-parser.outputs.jsonString }}
         run: |
-          echo "what-happened: ${WHAT}"
-          echo "Environments: ${ENVIRONMENTS}"
+          # 1. Print the raw JSON to your logs so you can see the exact keys
+          echo "--- RAW PARSED JSON DATA ---"
+          echo "$RAW_JSON"
+          echo "----------------------------"
+          
+          # 2. Extract values safely using 'jq' based on your Markdown fields
+          # (Note: jq keys are case-sensitive and match your template IDs)
+          TENANT=$(echo "$RAW_JSON" | jq -r '."tenant_id" // ."tenant-id" // ."Tenant ID" // empty')
+          WHAT=$(echo "$RAW_JSON" | jq -r '."what-happened" // ."what_happened" // empty')
+          ENVIRONMENTS=$(echo "$RAW_JSON" | jq -c '."environments" // ."Environments" // empty')
+          
+          # 3. Echo the final extracted data
           echo "Tenant: ${TENANT}"
+          echo "Environments: ${ENVIRONMENTS}"
+          echo "what-happened: ${WHAT}"
